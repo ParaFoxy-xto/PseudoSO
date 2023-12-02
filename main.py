@@ -1,6 +1,7 @@
 from process import Processo
 from read_files import LeitorArquivo
 from memory_manager import Memoria
+from file_system import SistemaArquivos
 
 def principal():
     CAMINHO_PROCESSOS = "input_files/processes.txt"
@@ -11,12 +12,15 @@ def principal():
     dados_arquivos = LeitorArquivo.ler_arquivo_arquivos(CAMINHO_ARQUIVOS)
     processos = [Processo(*dados) for dados in dados_processos]
 
+    memoria = Memoria(tamanho_total=1024, blocos_tempo_real=64)
+
+    tamanho_disco = dados_arquivos['total_blocos']
+    gerenciador_arquivos = SistemaArquivos(tamanho_disco, processos)
 
     # # testes:
     # print(dados_arquivos)
     # print(*processos, sep="\n")
 
-    # memoria = Memoria(tamanho_total=1024, blocos_tempo_real=64)
     # for processo in processos:
     #     memoria.alocar_memoria(processo)
     # print(memoria.memoria_ocupada)
