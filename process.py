@@ -15,6 +15,20 @@ class Processo:
         self.drive = drive
         self.eh_tempo_real = prioridade == 0
 
+    @staticmethod
+    def se_existe_processo_com_esse_id(codigo_processo, lista_processos):
+        for processo in lista_processos:
+            if processo.pid == codigo_processo:
+                return True
+        return False 
+    
+    @staticmethod
+    def verificar_tempo_real(codigo_processo, lista_processos):
+        for processo in lista_processos:
+            if processo.pid == codigo_processo:
+                return processo.eh_tempo_real
+        return None  # Retorna None se o processo não for encontrado
+
     def __str__(self):
         return (
             f"   PID: {self.pid}\n"

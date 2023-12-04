@@ -12,12 +12,17 @@ def principal():
     dados_arquivos = LeitorArquivo.ler_arquivo_arquivos(CAMINHO_ARQUIVOS)
     processos = [Processo(*dados) for dados in dados_processos]
 
-    memoria = Memoria(tamanho_total=1024, blocos_tempo_real=64)
-
+    # sistema de arquivos
     tamanho_disco = dados_arquivos['total_blocos']
     gerenciador_arquivos = SistemaArquivos(tamanho_disco, processos)
+    gerenciador_arquivos.processar_operacoes(dados_arquivos)
 
-    # # testes:
+    # gerenciador memoria
+    memoria = Memoria(tamanho_total=1024, blocos_tempo_real=64)
+
+
+    # testes:
+    # print(dados_processos)
     # print(dados_arquivos)
     # print(*processos, sep="\n")
 

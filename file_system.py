@@ -1,3 +1,5 @@
+from process import Processo
+
 class SistemaArquivos:
     def __init__(self, tamanho_disco, processos):
         self.tamanho_disco = tamanho_disco
@@ -7,7 +9,6 @@ class SistemaArquivos:
         self.processos = processos
 
     def criar_arquivo(self, processo_id, nome_arquivo, blocos_necessarios):
-        self.num_operacao += 1
         inicio_regiao = self.encontrar_inicio_contigua(blocos_necessarios)
         if inicio_regiao is not None:
             self.arquivos[nome_arquivo] = {"processo_id": processo_id, "inicio_regiao": inicio_regiao, "blocos": blocos_necessarios}
@@ -17,7 +18,6 @@ class SistemaArquivos:
         return f"Operação {self.num_operacao} => Falha: O processo {processo_id} não pode criar o arquivo {nome_arquivo} (falta de espaço)."
 
     def deletar_arquivo(self, processo_id, nome_arquivo, is_tempo_real):
-        self.num_operacao += 1
         if nome_arquivo in self.arquivos:
             if is_tempo_real or self.arquivos[nome_arquivo]["processo_id"] == processo_id:
                 inicio_regiao = self.arquivos[nome_arquivo]["inicio_regiao"]
@@ -44,10 +44,42 @@ class SistemaArquivos:
         return None
 
     def exibir_mapa_ocupacao(self):
+        print()
         print("Mapa de Ocupação do Disco:")
         for i in range(self.tamanho_disco):
             print(f"Bloco {i}: {self.mapa_ocupacao[i] if self.mapa_ocupacao[i] != 0 else 'Vazio'}")
 
+    def preencher_blocos_iniciais(self, dados_operacoes):
+        alocacao_arquivo = dados_operacoes['alocacao_arquivo']
+        for nome_arquivo, blocos_ocupados in alocacao_arquivo.items():
+            primeiro_bloco = blocos_ocupados[0]
+            quantidade_blocos = len(blocos_ocupados)
+            self.arquivos[nome_arquivo] = {"inicio_regiao": primeiro_bloco, "blocos": quantidade_blocos}
+            for bloco_ocupado in blocos_ocupados:
+                self.mapa_ocupacao[bloco_ocupado] = nome_arquivo
+
+
+
+    def processar_operacoes(self, dados_operacoes):
+        print()
+        print("Sistema de arquivos =>")
+        self.preencher_blocos_iniciais(dados_operacoes)
+        for operacao in dados_operacoes['operacoes']:
+            self.num_operacao += 1
+            id_processo, codigo_operacao, *params = operacao
+            nome_arquivo = params[0]
+
+            if (Processo.se_existe_processo_com_esse_id(int(id_processo), self.processos)):
+                if codigo_operacao == 0:  # Criar arquivo
+                    blocos = params[1]
+                    print(self.criar_arquivo(int(id_processo), nome_arquivo, int(blocos)))
+                elif codigo_operacao == 1:  # Deletar arquivo
+                    eh_tempo_real = Processo.verificar_tempo_real(int(id_processo), self.processos)
+                    print(self.deletar_arquivo(int(id_processo), nome_arquivo, eh_tempo_real))
+            else:
+                print(f"Operação {self.num_operacao} => Falha: O processo {id_processo} não existe.")
+        self.exibir_mapa_ocupacao()
+                
 
 # # Exemplo de uso:
 # from read_files import LeitorArquivo
@@ -63,6 +95,6 @@ class SistemaArquivos:
 # print(sistema_arquivos.deletar_arquivo(processo_id=3, nome_arquivo="X", is_tempo_real=False))
 # print(sistema_arquivos.deletar_arquivo(processo_id=2, nome_arquivo="Y", is_tempo_real=True))
 # print(sistema_arquivos.criar_arquivo(processo_id=0, nome_arquivo="D", blocos_necessarios=3))
-# print(sistema_arquivos.deletar_arquivo(processo_id=1, nome_arquivo="E", is_tempo_real=False))
+# print(sistema_arquivos.deletar_arquivo(processo_id=1, nome_arquivo="X", is_tempo_real=True))
 
 # sistema_arquivos.exibir_mapa_ocupacao()
