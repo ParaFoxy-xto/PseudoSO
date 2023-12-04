@@ -20,7 +20,6 @@ class GerenciadorFilas:
             if es.alocar_recursos(processo):
                 self.filas_usuario[processo.prioridade].append(processo)
             else:
-                processo.bloqueado = True
                 self.fila_bloqueados.append(processo)
 
     def obter_proximo_processo(self):
