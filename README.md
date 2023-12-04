@@ -1,3 +1,5 @@
+Eduardo Afonso da Silva Inácio, 221033920
+
 # Introdução ao Projeto - Implementação de Pseudo-SO Multiprogramado
 
 Este projeto, desenvolvido como parte da disciplina de Sistemas Operacionais (FSO), reúne um grupo de três colaboradores para criar um Pseudo-Sistema Operacional (Pseudo-SO) multiprogramado. Ao longo das distintas fases do trabalho, nosso objetivo é abordar os fundamentos teóricos do tema, apresentar soluções teóricas para os problemas propostos e, finalmente, implementar um sistema robusto que incorpora um Gerenciador de Processos, um Gerenciador de Memória, um Gerenciador de E/S e um Gerenciador de Arquivos.
@@ -48,3 +50,11 @@ Z, 5, 3
 0, 0, D, 3
 1, 0, E, 2
 ```
+
+### Estrutura de filas 
+
+A classe GerenciadorFilas possui métodos para adicionar processos à fila de processos de tempo real, usuários e bloqueados, além de métodos para obter o próximo processo a ser executado, envelhecer processos de usuário, verificar a necessidade de preempção entre processos e desbloquear processos previamente bloqueados. A função adicionar_processo aloca os processos nas filas apropriadas com base em sua prioridade e se são de tempo real. O método obter_proximo_processo retorna o próximo processo a ser executado, considerando as filas de tempo real e de usuário. O método envelhecer_processos reduz a prioridade dos processos de usuário, garantindo uma execução justa. A função preempcao_necessaria verifica se a preempção é necessária entre o processo atual e um novo processo com base em prioridades. Finalmente, desbloquear_processo move um processo previamente bloqueado de volta para a fila apropriada após desbloqueio. Este gerenciador de filas é crucial para a eficiente execução de processos no sistema operacional simulado, otimizando o uso de recursos e a priorização de processos.
+
+### Gerenciamento de E/S
+
+A classe gerenciadorES possui métodos para alocar, desalocar recursos e verificar se ocorrerá um overflow ao tentar alocar recursos. O dicionário recursos contém a quantidade global disponível de cada recurso. O método alocar_recursos verifica se há recursos suficientes para alocar com base nos recursos necessários para o processo, e em caso de insuficiência, reverte para o estado anterior. O método desalocar_recursos libera os recursos alocados anteriormente. A função overflow verifica se a alocação resultará em um overflow, indicando a indisponibilidade de recursos necessários. Esta classe é fundamental para garantir a correta utilização dos recursos de Entrada/Saída pelos processos do sistema operacional. 
