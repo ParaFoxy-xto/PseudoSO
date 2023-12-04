@@ -20,6 +20,9 @@ def principal():
     # gerenciador memoria
     memoria = Memoria(tamanho_total=1024, blocos_tempo_real=64)
 
+    despachante(processos[0])
+    print_queue(processos)
+
 
     # testes:
     # print(dados_processos)
@@ -35,6 +38,27 @@ def principal():
     # print(memoria.memoria_ocupada)
 
     # print(*processos, sep="\n")
+
+def despachante(processo):
+    print("\nDespachante:")
+    print(" PID: ", processo.pid)
+    print(" offset: ", processo.offset)
+    print(" blocos de memoria: ", processo.blocos_de_memoria)
+    print(" prioridade: ", processo.prioridade)
+    print(" tempo: ", processo.tempo)
+    print(" impressora: ", processo.impressora)
+    print(" scanner: ", processo.scanner)
+    print(" modem: ", processo.modem)
+    print(" drive: ", processo.drive)
+    print(" eh tempo real: ", processo.eh_tempo_real)
+
+
+def print_queue(queue):
+    fila = []
+    for processo in queue:
+        fila.append(processo.pid)
+    print(fila)
+    return fila
 
 if __name__ == "__main__":
     principal()
