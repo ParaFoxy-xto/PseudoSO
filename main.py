@@ -20,7 +20,11 @@ def principal():
     # gerenciador memoria
     memoria = Memoria(tamanho_total=1024, blocos_tempo_real=64)
 
-    despachante(processos[0])
+    #call despachante for each process
+    for processo in processos:
+        despachante(processo)
+        #memoria.alocar_memoria(processo)
+        
     print_queue(processos)
 
 
