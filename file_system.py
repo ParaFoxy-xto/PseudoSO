@@ -3,14 +3,15 @@ from process import Processo
 class SistemaArquivos:
     def __init__(self, tamanho_disco, processos):
         self.tamanho_disco = tamanho_disco
-        self.mapa_ocupacao = [0] * tamanho_disco
-        self.arquivos = {}
-        self.num_operacao = 0
-        self.processos = processos
+        self.mapa_ocupacao = [0] * tamanho_disco  # Representa a ocupação de blocos no disco
+        self.arquivos = {}  # Dicionário para armazenar informações sobre os arquivos
+        self.num_operacao = 0  # Contador para o número da operação
+        self.processos = processos  # Lista de processos no sistema
 
     def criar_arquivo(self, processo_id, nome_arquivo, blocos_necessarios):
         inicio_regiao = self.encontrar_inicio_contigua(blocos_necessarios)
         if inicio_regiao is not None:
+            # Espaço contíguo encontrado, cria o arquivo e atualiza o mapa de ocupação
             self.arquivos[nome_arquivo] = {"processo_id": processo_id, "inicio_regiao": inicio_regiao, "blocos": blocos_necessarios}
             for i in range(inicio_regiao, inicio_regiao + blocos_necessarios):
                 self.mapa_ocupacao[i] = nome_arquivo
@@ -20,6 +21,7 @@ class SistemaArquivos:
     def deletar_arquivo(self, processo_id, nome_arquivo, is_tempo_real):
         if nome_arquivo in self.arquivos:
             if is_tempo_real or self.arquivos[nome_arquivo]["processo_id"] == processo_id:
+                # Verifica permissões e deleta o arquivo atualizando o mapa de ocupação
                 inicio_regiao = self.arquivos[nome_arquivo]["inicio_regiao"]
                 blocos_ocupados = self.arquivos[nome_arquivo]["blocos"]
                 del self.arquivos[nome_arquivo]
@@ -31,7 +33,7 @@ class SistemaArquivos:
         else:
             return f"Operação {self.num_operacao} => Falha: O processo {processo_id} não pode deletar o arquivo {nome_arquivo} porque ele não existe"
 
-    # first-fit
+    # Algoritmo first-fit para encontrar espaço contíguo no disco
     def encontrar_inicio_contigua(self, blocos_necessarios):
         contagem_blocos = 0
         for i in range(self.tamanho_disco):
@@ -49,6 +51,7 @@ class SistemaArquivos:
         for i in range(self.tamanho_disco):
             print(f"Bloco {i}: {self.mapa_ocupacao[i] if self.mapa_ocupacao[i] != 0 else 'Vazio'}")
 
+    # Método para preencher os blocos iniciais com base nas alocações de arquivo iniciais
     def preencher_blocos_iniciais(self, dados_operacoes):
         alocacao_arquivo = dados_operacoes['alocacao_arquivo']
         for nome_arquivo, blocos_ocupados in alocacao_arquivo.items():
@@ -58,8 +61,7 @@ class SistemaArquivos:
             for bloco_ocupado in blocos_ocupados:
                 self.mapa_ocupacao[bloco_ocupado] = nome_arquivo
 
-
-
+    # Método para processar as operações do sistema de arquivos
     def processar_operacoes(self, dados_operacoes):
         print()
         print("Sistema de arquivos =>")
@@ -79,7 +81,6 @@ class SistemaArquivos:
             else:
                 print(f"Operação {self.num_operacao} => Falha: O processo {id_processo} não existe.")
         self.exibir_mapa_ocupacao()
-                
 
 # # Exemplo de uso:
 # from read_files import LeitorArquivo
