@@ -1,4 +1,5 @@
 Eduardo Afonso da Silva Inácio, 221033920
+Vinícius de Sousa Brito, 211042748
 
 # Introdução ao Projeto - Implementação de Pseudo-SO Multiprogramado
 
@@ -58,3 +59,15 @@ A classe GerenciadorFilas possui métodos para adicionar processos à fila de pr
 ### Gerenciamento de E/S
 
 A classe gerenciadorES possui métodos para alocar, desalocar recursos e verificar se ocorrerá um overflow ao tentar alocar recursos. O dicionário recursos contém a quantidade global disponível de cada recurso. O método alocar_recursos verifica se há recursos suficientes para alocar com base nos recursos necessários para o processo, e em caso de insuficiência, reverte para o estado anterior. O método desalocar_recursos libera os recursos alocados anteriormente. A função overflow verifica se a alocação resultará em um overflow, indicando a indisponibilidade de recursos necessários. Esta classe é fundamental para garantir a correta utilização dos recursos de Entrada/Saída pelos processos do sistema operacional. 
+
+### Sistema de Arquivos
+
+A classe `SistemaArquivos` gerencia operações do sistema de arquivos. Seus atributos incluem o tamanho total do disco, um mapa de ocupação que indica os blocos utilizados, um dicionário de arquivos contendo informações como processo associado e início da região no disco, um contador para operações e uma lista de processos no sistema. Os métodos principais, como `criar_arquivo` e `deletar_arquivo`, realizam alocações contíguas no disco e atualizam o mapa de ocupação. A função `encontrar_inicio_contigua` implementa um algoritmo de first-fit para encontrar espaços contíguos no disco.
+
+### Gerenciador de Memória
+
+A classe `Memoria` é responsável por gerenciar a alocação dinâmica de memória para processos. Seus atributos incluem o tamanho total da memória, a quantidade de blocos dedicados a processos de tempo real, e as respectivas quantidades de blocos disponíveis para esses dois tipos de processos. A lista `memoria_ocupada` é utilizada para rastrear a ocupação de cada bloco de memória. O método `alocar_memoria` implementa a lógica de alocação, verificando a disponibilidade de espaço e alocando regiões contíguas conforme necessário. O método `liberar_memoria` desaloca a memória previamente alocada por um processo, atualizando a lista `memoria_ocupada` e os blocos disponíveis. A busca por regiões contíguas é realizada pelo método `encontrar_inicio_regiao_contigua`. 
+
+### Processo
+
+A classe `Processo` representa entidades de processos no sistema operacional. Cada processo é caracterizado por um identificador único (`pid`), que é incrementado a cada nova instanciação, e possui atributos como tempo inicial, prioridade, tempo de execução, quantidade de blocos de memória requeridos, e disponibilidade de recursos de E/S, como impressora, scanner, modem e drive. A propriedade `eh_tempo_real` é um indicador booleano que determina se o processo pertence à classe de tempo real com base em sua prioridade. A classe fornece métodos estáticos para verificar a existência de um processo com um determinado ID e para determinar se um processo é de tempo real. Além disso, o método `__str__` é implementado para facilitar a representação em string de um objeto `Processo`.
